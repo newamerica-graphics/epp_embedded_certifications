@@ -26,7 +26,7 @@ module.exports = env => {
       new ExtractTextPlugin({ filename: "bundle.css" }),
       new HtmlWebpackPlugin({
         title: "",
-        chartIDs: [],
+        chartIDs: ["map"],
         inject: false,
         template: path.resolve(__dirname, "src/index.html")
       }),
