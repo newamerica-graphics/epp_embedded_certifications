@@ -4,8 +4,6 @@ const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const CompressionPlugin = require("compression-webpack-plugin");
-const S3Plugin = require("webpack-s3-plugin");
-const FileManagerPlugin = require("filemanager-webpack-plugin");
 
 module.exports = env => {
   return {
@@ -22,62 +20,19 @@ module.exports = env => {
       newamericadotorg: "newamericadotorg"
     },
     plugins: [
-      new webpack.HotModuleReplacementPlugin(),
+      env.deploy === "development" && new webpack.HotModuleReplacementPlugin(),
       new ExtractTextPlugin({ filename: "bundle.css" }),
       new HtmlWebpackPlugin({
         title: "",
-        chartIDs: ["map"],
+        chartIDs: ["viz__map"],
         inject: false,
         template: path.resolve(__dirname, "src/index.html")
       }),
       env.deploy &&
         new CompressionPlugin({
           test: /\.(js|css)$/,
-          asset: "[path].gz[query]",
-          algorithm: "gzip",
-          deleteOriginalAssets: false
-        }),
-      env.deploy &&
-        new FileManagerPlugin({
-          onEnd: {
-            copy: [
-              {
-                source: "public/bundle.[hash].js.gz",
-                destination: "public/dist/bundle.js.gz"
-              },
-              {
-                source: "public/bundle.[hash].js",
-                destination: "public/bundle.js"
-              }
-            ],
-            delete: ["public/bundle.[hash].js"]
-          }
-        }),
-      env.deploy &&
-        new S3Plugin({
-          s3Options: {
-            accessKeyId: process.env.AWS_ACCESS_KEY, // Your AWS access key
-            secretAccessKey: process.env.AWS_SECRET_KEY, // Your AWS secret key
-            region: "us-east-1"
-          },
-          s3UploadOptions: {
-            Bucket: "datadotnewamerica",
-            ContentEncoding(fileName) {
-              if (/\.gz/.test(fileName)) {
-                return "gzip";
-              }
-            },
-            ContentType(fileName) {
-              if (/\.css/.test(fileName)) {
-                return "text/css";
-              }
-              if (/\.js/.test(fileName)) {
-                return "text/javascript";
-              }
-            }
-          },
-          basePath: path.basename(__dirname),
-          directory: "public"
+          filename: "[path].gz[query]",
+          algorithm: "gzip"
         })
     ].filter(plugin => plugin),
     module: {

@@ -4,7 +4,7 @@ import ReactDOM from "react-dom";
 import PindropMap from "./charts/PindropMap";
 
 const settings = {
-  map: {
+  viz__map: {
     render: map
   }
 };
@@ -33,12 +33,23 @@ function map(el, data) {
       </div>
     </div>
   );
+  const source = () => (
+    <span>
+      Student enrollment figures taken from the National Center for Education
+      Statistics Integrated Postsecondary Education Data System (IPEDS).
+      Accessed through{" "}
+      <a href="https://nces.ed.gov/collegenavigator/" target="_blank">
+        College Navigator
+      </a>
+      , September 4, 2018.
+    </span>
+  );
   ReactDOM.render(
     <PindropMap
       data={data.map}
       geometry="us"
       title="Phase II Interviewees"
-      source="Student enrollment figures taken from the National Center for Education Statistics Integrated Postsecondary Education Data System (IPEDS). Accessed through College Navigator, September 4, 2018."
+      source={source}
       width={1000}
       height={600}
       tooltipTemplate={tooltipTemplate}
@@ -50,7 +61,7 @@ function map(el, data) {
 window.renderDataViz = function(el) {
   let id = el.getAttribute("id");
   fetch(
-    "http://na-data-projects.s3.amazonaws.com/data/epp/embedded_certifications.json"
+    "https://na-data-projects.s3.amazonaws.com/data/epp/embedded_certifications.json"
   )
     .then(response => response.json())
     .then(data => settings[id].render(el, data));
