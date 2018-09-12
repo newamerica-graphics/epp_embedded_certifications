@@ -8,7 +8,10 @@ const Source = props => (
   </span>
 );
 const ChartContainer = props => (
-  <div className="chart">
+  <div
+    className="chart"
+    style={{ maxWidth: "1200px", marginLeft: "auto", marginRight: "auto" }}
+  >
     <div className="chart__meta-container">
       {props.title ? <Title title={props.title} /> : null}
       {props.subtitle ? <Subtitle subtitle={props.subtitle} /> : null}
