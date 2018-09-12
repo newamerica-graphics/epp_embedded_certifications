@@ -46,7 +46,7 @@ function map(el, data) {
   );
   ReactDOM.render(
     <PindropMap
-      data={data.map}
+      data={data.viz__map}
       geometry="us"
       title="Phase II Interviewees"
       source={source}
@@ -64,5 +64,7 @@ window.renderDataViz = function(el) {
     "https://na-data-projects.s3.amazonaws.com/data/epp/embedded_certifications.json"
   )
     .then(response => response.json())
-    .then(data => settings[id].render(el, data));
+    .then(data => {
+      settings[id].render(el, data);
+    });
 };
